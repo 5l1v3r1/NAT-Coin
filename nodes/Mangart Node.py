@@ -91,6 +91,12 @@ def background():
         server_socket.sendto(ip_table_enc.encode(),(str(dt[0]), 9000))
         time.sleep(2)
 
+def rst():
+    global ip_table
+    ip_table = {}
+    time.sleep(6)
+
+
 bg = threading.Thread(name='background', target=background)
 bg.start()
 
@@ -99,3 +105,6 @@ recip.start()
 
 sndip = threading.Thread(name='SND_IP', target=snd_ip_tbl)
 sndip.start()
+
+rt = threading.Thread(name='rst', target=rst)
+rt.start()
