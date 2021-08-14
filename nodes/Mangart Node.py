@@ -45,8 +45,15 @@ def cross():
         data, address = sock.recvfrom(1024)
         data = data.decode()
         data = json.loads(data)
-        if data != ip_table:
-                ip_table = data
+
+        if(len(ip_table) > len(data)):
+            for i in range(len(data)):
+                if(ip_table[i] != data[i]):
+                    ip_table[len(ip_table)] = data[i]
+        if(len(data) > len(ip_table)):
+            for i in range(len(ip_table)):
+                if(ip_table[i] != data[i]):
+                    ip_table[len(ip_table)] = data[i]
                 
 def send_cross():
     global ip_table
