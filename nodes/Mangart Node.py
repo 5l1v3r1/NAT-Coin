@@ -1,4 +1,3 @@
-from NAT.NAT import ip_tables
 import socket
 import threading
 import json
