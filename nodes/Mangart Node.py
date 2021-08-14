@@ -47,7 +47,7 @@ def rec_ip_tbl():
     data = json.loads(data)
     print(data)
 
-    if(len(data) > len(ip_table)):
+    if(len(data) > len(ip_table) or len(data) == len(ip_table)):
         for i in range(len(ip_table)):
             if(ip_table[i] != data[i]):
                 ip_table[len(ip_table)] = data[i]
@@ -55,6 +55,7 @@ def rec_ip_tbl():
         for i in range(len(data)):
             if(ip_table[i] != data[i]):
                 ip_table[len(ip_table)] = data[i]
+                print(data[i])
     
     print(ip_table)
 
@@ -69,7 +70,6 @@ def background():
     global ip_table
     while True:
         data, address = server_socket.recvfrom(1024)
-        print(address)
         x = data.decode()
         x = x.strip("[]")
         x = x.replace("'","")
@@ -87,8 +87,8 @@ def background():
 bg = threading.Thread(name='background', target=background)
 bg.start()
 
-recip = threading.Thread(name='REC_IP', target=background)
+recip = threading.Thread(name='REC_IP', target=rec_ip_tbl)
 recip.start()
 
-sndip = threading.Thread(name='SND_IP', target=background)
+sndip = threading.Thread(name='SND_IP', target=snd_ip_tbl)
 sndip.start()
