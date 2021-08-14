@@ -15,10 +15,12 @@ import hashlib
 import json
 from time import time
 
-#nodes = ['192.168.0.15','192.168.0.20']
-nodes = ['192.168.0.20']
+nodes = ['192.168.0.15','192.168.0.20']
+#nodes = ['192.168.0.20']
 
 global res_addr, addr
+
+addr ={}
 
 class Blockchain(object):
     def __init__(self):
@@ -102,15 +104,18 @@ server_socket.bind(('', 9000))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 client_socket.settimeout(1.0)
 
+ip_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+ip_sock.settimeout(1.0)
+
 fee = float(0.05)
 
 def findNode():
     ran = random.randint(0,len(nodes)-1)
-    addr = (nodes[ran],18000)
+    addre = (nodes[ran],18000)
     fake_list = nodes
     try:
         client_socket.settimeout(1.0)
-        client_socket.connect(addr)
+        client_socket.connect(addre)
         return nodes[ran]
     except:
         fake_list.remove(nodes[ran])
@@ -119,10 +124,10 @@ def findNode():
             if len(fake_list) == 0:
                 return "no nodes currently avalible"
             ran = random.randint(0,len(fake_list)-1)
-            addr = (fake_list[ran],18000)
+            addre = (fake_list[ran],18000)
             try:
                 client_socket.settimeout(1.0)
-                client_socket.connect(addr)
+                client_socket.connect(addre)
                 return fake_list[ran]
             except:
                 fake_list.remove(nodes[ran])
@@ -198,16 +203,16 @@ def ip_tables():
     while True:
         message = str([get_ip_address(),id,'iptables'])
         message = message.encode()
-        addr = (str(ip_addr), 18000)
+        addre = (str(ip_addr), 18000)
         res_addr = addr
-        client_socket.sendto(message, addr)
+        server_socket.sendto(message, addre)
         try:
-            data, server = client_socket.recvfrom(1024)
+            data, server = server_socket.recvfrom(1024)
             pre_addr = data.decode()
             addr = json.loads(pre_addr)
         except:
             ip_addr = findNode()
-        sleep(1)
+        
 
 def background():
     global balance
@@ -229,13 +234,12 @@ def background():
                     ----------------------------------------------------------------
                     """)
                 except Exception as err:
-                    print("OS error: {0}".format(err))
-                    print("pass")
+                    pass
             except:
                 pass
 
 def foreground():
-    global balance, fee, config, id,res_addr
+    global balance, fee, config, id,res_addr, addr
     while True:
         do = input("\n$ ").lower()
         if do == "send":
