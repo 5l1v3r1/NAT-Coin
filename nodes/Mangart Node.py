@@ -49,12 +49,12 @@ def rec_ip_tbl():
         print(data)
 
         if(len(data) > len(ip_table) or len(data) == len(ip_table)):
-            for i in range(len(ip_table)):
+            for i in range(len(ip_table)-1):
                 if(ip_table[i] != data[i]):
                     ip_table[len(ip_table)] = data[i]
                     print(data[i])
                     print(ip_table)
-        elif(len(data) > len(ip_table)):
+        elif(len(data) > len(ip_table)-1):
             for i in range(len(data)):
                 if(ip_table[i] != data[i]):
                     ip_table[len(ip_table)] = data[i]
