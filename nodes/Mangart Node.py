@@ -50,12 +50,18 @@ def rec_ip_tbl():
 
         if(len(data) > len(ip_table) or len(data) == len(ip_table)):
             for i in range(len(ip_table)-1):
-                if(ip_table[i] != data[i]):
-                    ip_table[data[i][1]] = data[i][0]
+                try:
+                    if(ip_table[i] != data[i]):
+                        ip_table[data[i][1]] = data[i][0]
+                except:
+                    pass
         elif(len(data) > len(ip_table)-1):
             for i in range(len(data)):
-                if(ip_table[i] != data[i]):
-                    ip_table[data[i][1]] = data[i][0]
+                try:
+                    if(ip_table[i] != data[i]):
+                        ip_table[data[i][1]] = data[i][0]
+                except:
+                    pass
         
         print(ip_table)
 
