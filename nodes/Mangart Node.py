@@ -110,5 +110,5 @@ recip.start()
 sndip = threading.Thread(name='SND_IP', target=snd_ip_tbl)
 sndip.start()
 
-rt = threading.Thread(name='rst', target=rst)
+rt = threading.Thread(name='rst', target=delete_ip)
 rt.start()
