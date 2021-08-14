@@ -93,8 +93,9 @@ def background():
 
 def rst():
     global ip_table
-    ip_table = {}
-    time.sleep(6)
+    while(True):
+        ip_table = {}
+        time.sleep(6)
 
 
 bg = threading.Thread(name='background', target=background)
