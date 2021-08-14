@@ -289,7 +289,10 @@ def foreground():
             else:
                 print(transactions)
         elif do == "exit":
-                exit()
+            server_socket.shutdown()
+            client_socket.shutdown()
+            ip_sock.shutdown()
+            exit()
         elif do == "iptables":
              print("\n\n"+str(addr)+"\n\n")
         elif do == "blockchain":
