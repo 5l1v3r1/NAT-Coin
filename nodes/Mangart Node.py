@@ -42,29 +42,34 @@ client_socket.settimeout(1.0)
    
 def rec_ip_tbl():
     global ip_table
-    data_enc, address = sock.recvfrom(1024)
-    data = data_enc.decode()
-    data = json.loads(data)
-    print(data)
+    while(True):
+        data_enc, address = sock.recvfrom(1024)
+        data = data_enc.decode()
+        data = json.loads(data)
+        print(data)
 
-    if(len(data) > len(ip_table) or len(data) == len(ip_table)):
-        for i in range(len(ip_table)):
-            if(ip_table[i] != data[i]):
-                ip_table[len(ip_table)] = data[i]
-    elif(len(data) > len(ip_table)):
-        for i in range(len(data)):
-            if(ip_table[i] != data[i]):
-                ip_table[len(ip_table)] = data[i]
-                print(data[i])
-    
-    print(ip_table)
+        if(len(data) > len(ip_table) or len(data) == len(ip_table)):
+            for i in range(len(ip_table)):
+                if(ip_table[i] != data[i]):
+                    ip_table[len(ip_table)] = data[i]
+                    print(data[i])
+                    print(ip_table)
+        elif(len(data) > len(ip_table)):
+            for i in range(len(data)):
+                if(ip_table[i] != data[i]):
+                    ip_table[len(ip_table)] = data[i]
+                    print(data[i])
+                    print(ip_table)
+        
+        print(ip_table)
 
 def snd_ip_tbl():
     global ip_table
-    ip_table_enc = json.dumps(ip_table)
-    for i in range(len(verif)):
-        client_socket.sendto(ip_table_enc.encode(),(str(verif[i]), 24339))
-    time.sleep(2)
+    while(True):
+        ip_table_enc = json.dumps(ip_table)
+        for i in range(len(verif)):
+            client_socket.sendto(ip_table_enc.encode(),(str(verif[i]), 24339))
+        time.sleep(2)
 
 def background():
     global ip_table
