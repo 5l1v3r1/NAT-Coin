@@ -1,6 +1,7 @@
 import random
 import string
 import datetime
+import hashlib
 
 def get_random_id(gg):
     random_source = string.ascii_letters + string.digits + string.punctuation
@@ -18,7 +19,7 @@ def get_random_id(gg):
     date = date.replace("-","")
     date = date.replace(" ","")
     date = date.replace(":","")
-    date = date.replace("!@#$%^&*()[]{};:,./<>?\|`~-_+", " ")
+    date = date.translate ({ord(c): "" for c in "!@#$%^&*()[]{};:,./<>?\|`~-=_+"})
     return date
 id = get_random_id(10)
 
@@ -29,13 +30,18 @@ while True:
 		break
 	print("try again")
 	
+
+hash = hashlib.sha256()
+hash.update(password.encode())
+passwd = str(hash.digest())
+
 cert = get_random_id(100)
 file = open("dts.json","w")
 file.write("""
 [details]
 id = """ + id + """
 
-password = """ + password + """
+password = """ + passwd + """
 
 cert = """+cert+"""
 

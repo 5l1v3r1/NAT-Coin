@@ -15,7 +15,9 @@ import hashlib
 import json
 from time import time
 
-nodes = ['192.168.0.15','192.168.0.20']
+#nodes = ['192.168.0.15','192.168.0.20']
+nodes = ['192.168.0.20']
+
 global res_addr, addr
 
 class Blockchain(object):
@@ -91,7 +93,7 @@ def get_from_blockchain(what,num):
 
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
+    s.connect(("1.1.1.1", 80))
     return s.getsockname()[0]
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -153,6 +155,9 @@ cert = config['details']['cert']
 
 while True:
     passinput = getpass.getpass()
+    hash = hashlib.sha256()
+    hash.update(passinput.encode())
+    passinput = str(hash.digest())
     if passinput == passwd:
         break
     print('incorrect password: try again')
@@ -296,6 +301,3 @@ f = threading.Thread(name='foreground', target=foreground)
 b.start()
 f.start()
 g.start()
-
-#v = ui.load_view()
-#v.present('sheet')

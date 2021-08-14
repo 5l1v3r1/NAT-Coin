@@ -49,12 +49,14 @@ def cross():
                 ip_table = data
                 
 def send_cross():
+    global ip_table
     while True:
         for i in range(0,len(verif)-1):
             dtd = json.dumps(ip_table)
             server_socket.sendto(dtd.encode(), (str(verif[i]),24339))
     
 def background():
+    global ip_table
     while True:
         data, address = server_socket.recvfrom(1024)
         x = data.decode()
