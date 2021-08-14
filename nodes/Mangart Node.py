@@ -94,12 +94,14 @@ def background():
 def delete_ip():
     global ip_table
     alive = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    for i in range(len(ip_table)):
-        try:
-            alive.connect(ip_table[i][1], 9000)
-            alive.send("HEY!")
-        except:
-            del ip_table[i]
+    while(True):
+        for i in range(len(ip_table)):
+            try:
+                alive.connect(ip_table[i][1], 9000)
+                print(ip_table[i][1])
+                alive.send("HEY!")
+            except:
+                del ip_table[i]
 
 bg = threading.Thread(name='background', target=background)
 bg.start()
