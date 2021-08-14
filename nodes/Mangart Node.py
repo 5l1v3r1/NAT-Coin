@@ -91,12 +91,15 @@ def background():
         server_socket.sendto(ip_table_enc.encode(),(str(dt[0]), 9000))
         time.sleep(2)
 
-def rst():
+def delete_ip():
     global ip_table
-    while(True):
-        ip_table = {}
-        time.sleep(6)
-
+    alive = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    for i in range(len(ip_table)):
+        try:
+            alive.connect(ip_table[i][1], 9000)
+            alive.send("HEY!")
+        except:
+            del ip_table[i]
 
 bg = threading.Thread(name='background', target=background)
 bg.start()
