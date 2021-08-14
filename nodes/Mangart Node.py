@@ -95,13 +95,16 @@ def delete_ip():
     global ip_table
     alive = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while(True):
-        for i in range(len(ip_table)):
-            try:
-                alive.connect(ip_table[i][1], 9000)
-                print(ip_table[i][1])
-                alive.send("HEY!")
-            except:
-                del ip_table[i]
+        try:
+            for i in range(len(ip_table)):
+                try:
+                    alive.connect(ip_table[i][1], 9000)
+                    print(ip_table[i][1])
+                    alive.send("HEY!")
+                except:
+                    del ip_table[i]
+        except KeyError:
+            pass
 
 bg = threading.Thread(name='background', target=background)
 bg.start()
