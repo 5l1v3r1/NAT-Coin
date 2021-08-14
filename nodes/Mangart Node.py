@@ -86,3 +86,9 @@ def background():
 
 bg = threading.Thread(name='background', target=background)
 bg.start()
+
+recip = threading.Thread(name='REC_IP', target=background)
+recip.start()
+
+sndip = threading.Thread(name='SND_IP', target=background)
+sndip.start()
