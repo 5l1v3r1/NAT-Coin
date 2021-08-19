@@ -122,24 +122,29 @@ def delt():
     i = 0
     while(True):
         ip_table = table.reads()
-        ip_addr = list(ip_table.values())[i]
-        echo_address = (str(ip_addr),9000)
         try:
-            echo_socket.connect((echo_address))
-            echo_socket.send("HEY?".encode())
-            print("ok")
-            table.writes(ip_table)
-        except ConnectionRefusedError:
-                print("Removed: " + str(ip_addr))
-                sv = list(ip_table.keys())
-                idx = sv[i]
-                ip_table.pop(idx)
-                table.writes(ip_table)
-                i -= 1
-        time.sleep(2)
-        print(ip_table)
-        i += 1
-
+            ip_addr = list(ip_table.values())[i]
+            echo_address = (str(ip_addr),9000)
+            try:
+                echo_socket.connect((echo_address))
+                echo_socket.send("HEY?".encode())
+                print("ok")
+            except ConnectionRefusedError:
+                    print("Removed: " + str(ip_addr))
+                    sv = list(ip_table.keys())
+                    idx = sv[i]
+                    ip_table.pop(idx)
+                    table.writes(ip_table)
+                    i -= 1
+            time.sleep(2)
+            print(ip_table)
+            
+            if((i + 1) > (len(ip_table) - 1)):
+                i = 0
+            else:
+                i = 0
+        except IndexError:
+            continue
 
 bg = threading.Thread(name='background', target=background)
 bg.start()
