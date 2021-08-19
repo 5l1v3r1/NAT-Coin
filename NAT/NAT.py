@@ -27,7 +27,7 @@ class Blockchain(object):
     def __init__(self):
         self.chain = []
         self.pending_transactions = []
-        self.new_block(previous_hash="The times date",proof=100)
+        self.new_block(previous_hash="the begining",proof=100)
 
     def new_block(self, proof, previous_hash=None):
         block = {
@@ -95,9 +95,12 @@ def get_from_blockchain(what,num):
 
 
 def get_ip_address():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("1.1.1.1", 80))
-    return s.getsockname()[0]
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("1.1.1.1", 80))
+        return s.getsockname()[0]
+    except OSError:
+        print("No Network Connection Avalible")
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_socket.bind(('', 9000))
@@ -105,8 +108,7 @@ server_socket.bind(('', 9000))
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 client_socket.settimeout(1.0)
 
-ip_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-ip_sock.settimeout(1.0)
+echo_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 
 def exit_handler():
@@ -259,13 +261,15 @@ def foreground():
                         print("TRANSACTION ERROR: INSUFFICENT FUNDS")
                     else:
                         try:
-                            try:                            
+                            try:               
                                     balance = float(balance)
                                     amm = float(amm)
                                     oramm = amm
                                     mfee = amm * fee
                                     amm = float(amm - mfee)
-                                    balance = balance - oramm
+                                    echo_address = (str(addr[to]),9000)
+                                    echo_socket.connect((echo_address))
+                                    echo_socket.send("HEY?".encode())          
                                     req(id,addr[to],amm,'amount',to)
                                     blockchain.save(id,to,amm,balance)
                                     print("""
@@ -273,6 +277,7 @@ def foreground():
                                     -   You Sent """ + str(amm) + """ NAT To """ + to + """ -
                                     -------------------------------------------------------------------
                                     """)
+                                    balance = balance - oramm
                             except:
                                 print("TRANSACTION ERROR: DESTINATION IS OFFLINE")        
                                     
