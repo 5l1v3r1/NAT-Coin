@@ -128,7 +128,6 @@ def delt():
             try:
                 echo_socket.connect((echo_address))
                 echo_socket.send("HEY?".encode())
-                print(ip_addr + " is ok")
             except ConnectionRefusedError:
                     print("Removed: " + str(ip_addr))
                     ip_table = table.reads()
@@ -136,10 +135,9 @@ def delt():
                     idx = sv[i]
                     ip_table.pop(idx)
                     table.writes(ip_table)
+                    time.sleep(0.2)
                     i -= 1
-            time.sleep(1.5)
-            print(ip_table)
-            
+            time.sleep(0.1)
             if((i + 1) > (len(ip_table) - 1)):
                 i = 0
             else:
