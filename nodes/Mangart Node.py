@@ -39,6 +39,9 @@ sock.bind(('', 24339))
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 client_socket.settimeout(1.0)
+
+echo_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+echo_socket.settimeout(1.0)
    
 def rec_ip_tbl():
     global ip_table
@@ -91,20 +94,21 @@ def background():
         server_socket.sendto(ip_table_enc.encode(),(str(dt[0]), 9000))
         time.sleep(2)
 
-def delete_ip():
+def delt():
     global ip_table
-    alive = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while(True):
-        try:
-            for i in range(len(ip_table)):
-                try:
-                    alive.connect(ip_table[i][1], 9000)
-                    print(ip_table[i][1])
-                    alive.send("HEY!")
-                except:
-                    del ip_table[i]
-        except KeyError:
-            pass
+        for i in range(len(ip_table)):
+            ip_addr = ip_table.values()[i]
+            echo_address = (ip_addr,9000)
+            try:
+                echo_socket.connect(echo_address)
+            except:
+                kys = list(ip_table.keys())
+                idx = kys[i]
+                ip_table.pop(idx)
+                print("Removed: " + str(ip_addr))
+
+
 
 bg = threading.Thread(name='background', target=background)
 bg.start()
@@ -115,5 +119,5 @@ recip.start()
 sndip = threading.Thread(name='SND_IP', target=snd_ip_tbl)
 sndip.start()
 
-rt = threading.Thread(name='rst', target=delete_ip)
-rt.start()
+delen = threading.Thread(name='delen', target=delt)
+delen.start()

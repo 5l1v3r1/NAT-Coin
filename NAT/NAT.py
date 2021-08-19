@@ -252,6 +252,7 @@ def foreground():
                         print("TRANSACTION ERROR: INSUFFICENT FUNDS")
                     else:
                         try:
+                            try:                            
                                     balance = float(balance)
                                     amm = float(amm)
                                     oramm = amm
@@ -265,6 +266,8 @@ def foreground():
                                     -   You Sent """ + str(amm) + """ NAT To """ + to + """ -
                                     -------------------------------------------------------------------
                                     """)
+                            except:
+                                print("TRANSACTION ERROR: DESTINATION IS OFFLINE")        
                                     
                         except KeyError:
                                     print("TRANSACTION ERROR: DESTENATION DOES NOT EXIST")
