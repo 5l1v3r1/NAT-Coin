@@ -136,7 +136,7 @@ def delt():
                  idx = sv[i]
                  ip_table.pop(idx)
                  table.writes(ip_table)
-                 break
+                 i = i - 1
             time.sleep(2)
             print(ip_table)
     print("x")
