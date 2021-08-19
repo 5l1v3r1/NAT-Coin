@@ -3,6 +3,34 @@ import threading
 import json
 import time
 import configparser
+import pickle
+
+try:
+    open("ip_table.db","rb").close()
+
+except FileNotFoundError:
+    dest = open("ip_table.db", "wb")
+    rv = {}
+    dtd_enc = pickle.dumps(rv)
+    pickle.dump(dtd_enc, dest)
+    dest.close()
+
+class table:
+    def writes(tbl):
+        dest = open("ip_table.db", "wb")
+        tbl_enc = pickle.dumps(tbl)
+        pickle.dump(tbl_enc, dest)
+        dest.close()
+    
+    def reads():
+        try:
+            dest = open("ip_table.db", "rb")
+            dtd_enc = pickle.load(dest)
+            tbl = pickle.loads(dtd_enc)
+            dest.close()
+            return tbl
+        except:
+            return {}
 
 config = configparser.ConfigParser()
 config.read('node.json')
@@ -25,9 +53,6 @@ def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     return s.getsockname()[0]
-global ip_table
-
-ip_table = {}
 
 local_ip = get_ip_address()
 
@@ -43,8 +68,8 @@ client_socket.settimeout(1.0)
 echo_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
    
 def rec_ip_tbl():
-    global ip_table
     while(True):
+        ip_table = table.reads()
         data_enc, address = sock.recvfrom(1024)
         data = data_enc.decode()
         data = json.loads(data)
@@ -63,21 +88,20 @@ def rec_ip_tbl():
                         ip_table[data[i][1]] = data[i][0]
                 except:
                     pass
-        
-        #print(ip_table)
+        table.writes(ip_table)
         time.sleep(3)
 
 def snd_ip_tbl():
-    global ip_table
     while(True):
+        ip_table = table.reads()
         ip_table_enc = json.dumps(ip_table)
         for i in range(len(verif)):
             client_socket.sendto(ip_table_enc.encode(),(str(verif[i]), 24339))
-        time.sleep(3)
+        time.sleep(2)
 
 def background():
-    global ip_table
     while True:
+        ip_table = table.reads()
         data, address = server_socket.recvfrom(1024)
         x = data.decode()
         x = x.strip("[]")
@@ -91,11 +115,12 @@ def background():
         ip_table[dt[1]] = dt[0]
         ip_table_enc = json.dumps(ip_table)
         server_socket.sendto(ip_table_enc.encode(),(str(dt[0]), 9000))
+        table.writes(ip_table)
         time.sleep(3)
 
 def delt():
-    global ip_table
     while(True):
+        ip_table = table.reads()
         for i in range(len(ip_table)):
             ip_addr = list(ip_table.values())[i]
             echo_address = (str(ip_addr),9000)
@@ -105,7 +130,13 @@ def delt():
                 print("ok")
             except ConnectionRefusedError:
                  print("Removed: " + str(ip_addr))
+                 sv = list(ip_table.keys())
+                 idx = sv[i]
+                 ip_table.pop(idx)
+                 print(ip_table)
+            table.writes(ip_table)
             time.sleep(2)
+            print(ip_table)
 
 
 
