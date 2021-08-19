@@ -41,7 +41,6 @@ client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 client_socket.settimeout(1.0)
 
 echo_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-echo_socket.settimeout(1.0)
    
 def rec_ip_tbl():
     global ip_table
@@ -99,14 +98,14 @@ def delt():
     while(True):
         for i in range(len(ip_table)):
             ip_addr = list(ip_table.values())[i]
-            echo_address = (ip_addr,9000)
+            echo_address = (str(ip_addr),9000)
             try:
-                echo_socket.connect(echo_address)
-            except:
-                kys = list(ip_table.keys())
-                idx = kys[i]
-                ip_table.pop(idx)
-                print("Removed: " + str(ip_addr))
+                echo_socket.connect((echo_address))
+                echo_socket.send("HEY?".encode())
+                print("ok")
+            except ConnectionRefusedError:
+                 print("Removed: " + str(ip_addr))
+            time.sleep(2)
 
 
 

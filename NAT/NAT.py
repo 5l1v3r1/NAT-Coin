@@ -14,6 +14,7 @@ from time import sleep
 import hashlib
 import json
 from time import time
+import atexit
 
 nodes = ['192.168.0.15','192.168.0.20']
 #nodes = ['192.168.0.20']
@@ -107,6 +108,13 @@ client_socket.settimeout(1.0)
 ip_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 ip_sock.settimeout(1.0)
 
+
+def exit_handler():
+    server_socket.shutdown()
+    server_socket.close()
+    print("SOCKET 9000 STATUS: SHUTDOWN")    
+atexit.register(exit_handler)
+
 fee = float(0.05)
 
 def findNode():
@@ -191,7 +199,6 @@ addres = {}
 
 def req(send_addr,rec_addr,amount,what,rec_name):
     data = ""
-    local_ip = get_ip_address()
     data = [send_addr,rec_name,amount]
     data = str(data)
     data = data.encode()
@@ -292,18 +299,14 @@ def foreground():
             else:
                 print(transactions)
         elif do == "exit":
-            server_socket.shutdown()
-            client_socket.shutdown()
-            ip_sock.shutdown()
             exit()
         elif do == "iptables":
              print("\n\n"+str(addr)+"\n\n")
         elif do == "blockchain":
-                #print(get_from_blockchain('sender','most_rec'))
                 print(blockchain.chain)
         else:
                 print("could not read your query please try again.")
-    
+
 b = threading.Thread(name='background', target=background)
 g = threading.Thread(name='ip_tables', target=ip_tables)
 f = threading.Thread(name='foreground', target=foreground)
