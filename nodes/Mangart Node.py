@@ -98,7 +98,7 @@ def delt():
     global ip_table
     while(True):
         for i in range(len(ip_table)):
-            ip_addr = ip_table.values()[i]
+            ip_addr = list(ip_table.values())[i]
             echo_address = (ip_addr,9000)
             try:
                 echo_socket.connect(echo_address)
