@@ -49,7 +49,6 @@ def rec_ip_tbl():
         data_enc, address = sock.recvfrom(1024)
         data = data_enc.decode()
         data = json.loads(data)
-        print(data)
 
         if(len(data) > len(ip_table) or len(data) == len(ip_table)):
             for i in range(len(ip_table)-1):
@@ -66,7 +65,8 @@ def rec_ip_tbl():
                 except:
                     pass
         
-        print(ip_table)
+        #print(ip_table)
+        time.sleep(3)
 
 def snd_ip_tbl():
     global ip_table
@@ -74,7 +74,7 @@ def snd_ip_tbl():
         ip_table_enc = json.dumps(ip_table)
         for i in range(len(verif)):
             client_socket.sendto(ip_table_enc.encode(),(str(verif[i]), 24339))
-        time.sleep(2)
+        time.sleep(3)
 
 def background():
     global ip_table
@@ -92,7 +92,7 @@ def background():
         ip_table[dt[1]] = dt[0]
         ip_table_enc = json.dumps(ip_table)
         server_socket.sendto(ip_table_enc.encode(),(str(dt[0]), 9000))
-        time.sleep(2)
+        time.sleep(3)
 
 def delt():
     global ip_table
