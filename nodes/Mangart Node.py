@@ -119,27 +119,26 @@ def background():
         time.sleep(3)
 
 def delt():
+    i = 0
     while(True):
         ip_table = table.reads()
-        for i in range(len(ip_table)):
-            ip_table = table.reads()
-            ip_addr = list(ip_table.values())[i]
-            echo_address = (str(ip_addr),9000)
-            try:
-                echo_socket.connect((echo_address))
-                echo_socket.send("HEY?".encode())
-                print("ok")
+        ip_addr = list(ip_table.values())[i]
+        echo_address = (str(ip_addr),9000)
+        try:
+            echo_socket.connect((echo_address))
+            echo_socket.send("HEY?".encode())
+            print("ok")
+            table.writes(ip_table)
+        except ConnectionRefusedError:
+                print("Removed: " + str(ip_addr))
+                sv = list(ip_table.keys())
+                idx = sv[i]
+                ip_table.pop(idx)
                 table.writes(ip_table)
-            except ConnectionRefusedError:
-                 print("Removed: " + str(ip_addr))
-                 sv = list(ip_table.keys())
-                 idx = sv[i]
-                 ip_table.pop(idx)
-                 table.writes(ip_table)
-                 i = i - 1
-            time.sleep(2)
-            print(ip_table)
-    print("x")
+                i -= 1
+        time.sleep(2)
+        print(ip_table)
+        i += 1
 
 
 bg = threading.Thread(name='background', target=background)
