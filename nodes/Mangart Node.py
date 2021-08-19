@@ -97,7 +97,7 @@ def snd_ip_tbl():
         ip_table_enc = json.dumps(ip_table)
         for i in range(len(verif)):
             client_socket.sendto(ip_table_enc.encode(),(str(verif[i]), 24339))
-        time.sleep(2)
+        time.sleep(1.5)
 
 def background():
     while True:
@@ -116,7 +116,7 @@ def background():
         ip_table_enc = json.dumps(ip_table)
         server_socket.sendto(ip_table_enc.encode(),(str(dt[0]), 9000))
         table.writes(ip_table)
-        time.sleep(3)
+        time.sleep(1.5)
 
 def delt():
     i = 0
@@ -131,12 +131,13 @@ def delt():
                 print("ok")
             except ConnectionRefusedError:
                     print("Removed: " + str(ip_addr))
+                    ip_table = table.reads()
                     sv = list(ip_table.keys())
                     idx = sv[i]
                     ip_table.pop(idx)
                     table.writes(ip_table)
                     i -= 1
-            time.sleep(2)
+            time.sleep(1)
             print(ip_table)
             
             if((i + 1) > (len(ip_table) - 1)):
