@@ -94,6 +94,10 @@ nodes = nfile.read()
 nodes = json.loads(nodes)
 nfile.close()
 
+for i in range(len(nodes)):
+    if(nodes[i] == 0):
+        nodes.pop(nodes[i])
+
 # We define our global variables
 global res_addr, addr
 
@@ -385,12 +389,8 @@ wallet balance : """+str(balance)+"""
 def req(send_addr,rec_addr,amount,what,rec_name):
     # specifiy the data
     data = [send_addr,rec_name,amount]
-    # convert it to a string
-    data = str(data)
-    # encode the data
-    data = data.encode()
     # send the data
-    client_socket.sendto(data,(str(rec_addr),9000))
+    client_socket.sendto(str(data).encode(),(str(rec_addr),9000))
 
 # our function that send and recives the ip tables
 def ip_tables():
@@ -481,8 +481,12 @@ def foreground():
                                             echo_socket.send("HEY?".encode())
                                             sleep(0.5)
                                     print("Ping Succsess\n")     
-                                    # send a request     
-                                    req(id,addr[to],amm,'amount',to)
+                                    # send a request
+                                    try:     
+                                        req(id,addr[to],amm,'amount',to)
+                                    except:
+                                        print("OSError 22: REQUEST Failed")
+                                        continue
                                     stramm = amm
                                     # print the transaction
                                     print(snd_box(str(stramm), str(to)))
