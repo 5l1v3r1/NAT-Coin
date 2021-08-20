@@ -16,6 +16,9 @@ import json
 from time import time
 import atexit
 
+def save_callback(sender, data):
+    print("Save Clicked")
+
 nodes = ['192.168.0.15','192.168.0.20']
 #nodes = ['192.168.0.20']
 
@@ -112,9 +115,12 @@ echo_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 
 def exit_handler():
-    server_socket.shutdown()
     server_socket.close()
-    print("SOCKET 9000 STATUS: SHUTDOWN")    
+    try:
+        print("NAT-Coin Wallet Has Shutdown")
+    except KeyboardInterrupt:
+        print("NAT-Coin Wallet Has Shutdown")
+
 atexit.register(exit_handler)
 
 fee = float(0.05)
@@ -151,6 +157,48 @@ try:
 except:
     balance = float(10)
 
+def rec_box(fr, a):
+    top = ""
+    center = "- You Recived " + a + " NAT From " + fr + " -"
+    bt = ""
+    length = len(center)
+    if((length % 2) == 0):
+        half = length - 4
+        half = half / 2
+    else:
+        half = (length - 3) / 2
+    for i in range(length - 3):
+        if(i == half):
+            top += "RECV"
+            i += 4
+        else:
+            top += "-"
+    for i in range(length):
+        bt += "-"
+    
+    return (top + "\n" + center + "\n" + bt)
+
+def snd_box(fr, a):
+    top = ""
+    center = "- You Sent " + fr + " NAT To " + a + " -"
+    bt = ""
+    length = len(center)
+    if((length % 2) == 0):
+        half = length - 4
+        half = half / 2
+    else:
+        half = (length - 3) / 2
+    for i in range(length - 3):
+        if(i == half):
+            top += "SEND"
+            i += 4
+        else:
+            top += "-"
+    for i in range(length):
+        bt += "-"
+    
+    return (top + "\n" + center + "\n" + bt)
+
 print("""
 --------------------------------
 -       NAT COIN WALLET        -
@@ -175,7 +223,6 @@ while True:
     passinput = str(hash.digest())
     if passinput == passwd:
         break
-    print('incorrect password: try again')
 
 print("""
 --------------------------------
@@ -237,11 +284,12 @@ def background():
                 try:
                     balance += float(dt[2])
                     blockchain.save(dt[0],dt[1],dt[2],balance)
-                    print("""
-                    -------------------RECIVE---------------------------------------
-                    -   You Recived """ + dt[2] + """ NAT From """ + dt[0] + """ -
-                    ----------------------------------------------------------------
-                    """)
+                    # print("""
+                    # -------------------RECIVE---------------------------------------
+                    # -   You Recived """ + dt[2] + """ NAT From """ + dt[0] + """ -
+                    # ----------------------------------------------------------------
+                    # """)
+                    print(rec_box(dt[2], dt[0]))
                 except Exception as err:
                     pass
             except:
@@ -254,7 +302,13 @@ def foreground():
         if do == "send":
             to = input("Destination Username: ")
             if to != id:
-                amm = input("Amount (NAT):")
+                while(True):
+                    amm = input("Amount (NAT):")
+                    try:
+                        float(amm)
+                        break
+                    except:
+                        print("The Amount You Entered Was Not A Number\n")
                 conf = input("Are you sure? THIS CAN NOT BE UNDONE! y/n: ")
                 if conf == "y":
                     if (float(balance) == 0 or float(balance) - float(amm)) < 0:
@@ -267,18 +321,25 @@ def foreground():
                                     oramm = amm
                                     mfee = amm * fee
                                     amm = float(amm - mfee)
-                                    echo_address = (str(addr[to]),9000)
-                                    echo_socket.connect((echo_address))
-                                    echo_socket.send("HEY?".encode())          
+                                    print("\n")
+                                    for i in range(4):
+                                            print("Pinging Destination [" + str(i + 1) + " / 4]")
+                                            echo_address = (str(addr[to]),9000)
+                                            echo_socket.connect((echo_address))
+                                            echo_socket.send("HEY?".encode())
+                                            sleep(0.5)
+                                    print("Ping Succsess\n")          
                                     req(id,addr[to],amm,'amount',to)
-                                    blockchain.save(id,to,amm,balance)
-                                    print("""
-                                    ------------------SEND---------------------------------------------
-                                    -   You Sent """ + str(amm) + """ NAT To """ + to + """ -
-                                    -------------------------------------------------------------------
-                                    """)
+                                    # print("""
+                                    # ------------------SEND---------------------------------------------
+                                    # -   You Sent """ + str(amm) + """ NAT To """ + to + """ -
+                                    # -------------------------------------------------------------------
+                                    # """)
+                                    sramm = amm
+                                    print(snd_box(str(sramm), str(to)))
                                     balance = balance - oramm
-                            except:
+                                    blockchain.save(id,to,amm,balance)
+                            except ConnectionRefusedError:
                                 print("TRANSACTION ERROR: DESTINATION IS OFFLINE")        
                                     
                         except KeyError:
