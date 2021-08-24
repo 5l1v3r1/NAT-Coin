@@ -13,9 +13,7 @@ except:
 nodejn = open("nodes//node.json","w")
 nodejw = open("NAT//node.json","w")
 
-contents = ("""
-[verif]
-""")
+contents = ("[verif]")
 verif = []
 
 for i in range(4):

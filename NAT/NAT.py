@@ -421,6 +421,7 @@ def background():
     while(True):
         # try to recive data if there is no data we just start again
             try:
+                time.sleep(1)
                 # recive data
                 data, addrs = server_socket.recvfrom(9000)
                 # process the data to make it into a list
@@ -458,7 +459,10 @@ def foreground():
                     amm = input("Amount (NAT):")
                     try:
                         float(amm)
-                        break
+                        if(float(amm) < 0.00000001):
+                            print("The Amount You Entered Was Not Greater than 0.00000001\n")
+                        else:
+                            break
                     except:
                         print("The Amount You Entered Was Not A Number\n")
                 # ask for a confermation

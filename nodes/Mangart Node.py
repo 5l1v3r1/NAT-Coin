@@ -48,6 +48,9 @@ except:
     input("Press any key to exit.")
     exit()
 
+# define registered user table
+regtable = []
+
 # location of the ip addresses
 ip_file = "ip_table.db"
 
@@ -148,7 +151,6 @@ def rec_ip_tbl():
                 except:
                     pass
         table.writes(ip_table)
-        time.sleep(3)
 
 # send the ip table to a node
 def snd_ip_tbl():
@@ -163,6 +165,7 @@ def snd_ip_tbl():
 def background():
     while True:
         # recive the data
+        time.sleep(2.5)
         data, address = server_socket.recvfrom(1024)
         ip_table = table.reads()
         # process the data
@@ -172,18 +175,18 @@ def background():
         x = x.replace(" ","")
         dt = x.split(',')
         # see if the the client is not all ready connected
-        try:
-            ip_table[dt[1]]
-        except KeyError:
+        if(dt[0] in ip_table.values()):
+            pass
+        else:
             # print connectin status
             print("Connected with " + dt[0])
-        # append to the ip table
-        ip_table[dt[1]] = dt[0]
-        table.writes(ip_table)
+            # append to the ip table
+            ip_table[dt[1]] = dt[0]
+            table.writes(ip_table)
+
         ip_table_enc = json.dumps(ip_table)
         # one proceced send the table back to the client
         server_socket.sendto(ip_table_enc.encode(),(str(dt[0]), 9000))
-        time.sleep(1)
 
 # this deletes inactive ip adresses from the tables
 def delt():
