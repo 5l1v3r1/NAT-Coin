@@ -32,13 +32,6 @@ socket, base64, threading, time, random, string, datetime, getpass, configparser
 
 > Note that only one wallet can be running on a machine at one time and only one node can be running on a machine at one time but as they use diffrent ports you can run one node and one wallet on the same machine at the same time. 
 
-### Using the installer
-1. download the installer from the latest release
-2. launch it
-3. once finished you can find the node and wallet apps in your app list
-4. launch the wallet and go through the first time setup
-
-### Manualy
 1. download the latest release
 2. extract the files
 4. launch the wallet and go through the first time setup
@@ -46,7 +39,7 @@ socket, base64, threading, time, random, string, datetime, getpass, configparser
 # Instructions
 
 ### How to use a node
-It is actualy pretty simple, all you have to do is double click on the `node.py` file and your done unless you used the installer, then you just have to launch it via the app menu, if everythig is working then it should just show a black screen. If there is an error then just raise an issue.
+It is actualy pretty simple, all you have to do is double click on the `node.py` file and your done, if everythig is working then it should just show a black screen. If there is an error then just raise an issue.
 
 ### How to use the Wallet
 Launch the wallet like the node and enter the password you set during the first time setup, then it will present you some options chose one and then follow the instructions. If there is an error on screen then raise an issue
