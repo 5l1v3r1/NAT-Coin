@@ -32,9 +32,14 @@ socket, base64, threading, time, random, string, datetime, getpass, configparser
 
 > Note that only one wallet can be running on a machine at one time and only one node can be running on a machine at one time but as they use diffrent ports you can run one node and one wallet on the same machine at the same time. 
 
+### Install
 1. download the latest release
 2. extract the files
 4. launch the wallet and go through the first time setup
+
+### First time setup
+run the fts.py file to set your user id and the password
+then run nodeEdit.py to enter the ip adresses of all of the nodes, and do the same thing any time your nodes ip adress changes
  
 # Instructions
 
