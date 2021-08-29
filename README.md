@@ -51,5 +51,4 @@ It is actualy pretty simple, all you have to do is double click on the `node.py`
 ### How to use the Wallet
 Launch the wallet like the node and enter the password you set during the first time setup, then it will present you some options chose one and then follow the instructions. If there is an error on screen then raise an issue
 
-> I know that this ig garbage!
-> v2 comming soon!
+> This is most likley broken
